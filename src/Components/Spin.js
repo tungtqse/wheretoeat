@@ -18,8 +18,7 @@ export default class Spin extends React.Component {
         this.ctx = r.getContext("2d");
       }    
 
-    onSpin = (speed, duration) => {
-        
+    onSpin = (speed, duration) => {        
         var start = new Date().getTime();       
         var that = this;
         function frame() {
