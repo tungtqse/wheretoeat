@@ -1,0 +1,1 @@
+export const SPIN_LIST = 'spinList';

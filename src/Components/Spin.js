@@ -1,6 +1,7 @@
 import React from 'react';
+import {SPIN_LIST} from '../Common/Constants';
 
-const sections = ["PhoViet", "Vinh", "My Tau", "XinChao", "Thai",
+const tmpSections = ["PhoViet", "Vinh", "My Tau", "XinChao", "Thai",
                 "Lot10", "One More", "HoMinSan", "Thit Nuong", "Wangsamaju",
                 "PavilionFoodCourt", "Tùng Chọn"];
 
@@ -11,11 +12,14 @@ const innerHeight = window.innerHeight;
 var tempAngle = 0;
 
 export default class Spin extends React.Component {
-    state = {angle : 0};
-    setContext = this.setContext.bind(this);
+    state = {angle : 0, spins: []};
+    setContext = this.setContext.bind(this);   
 
-    setContext(r) {        
-        this.ctx = r.getContext("2d");
+    setContext(r) {      
+        if(r){
+            this.ctx = r.getContext("2d");
+        }  
+        
       }    
 
     onSpin = (speed, duration) => {        
@@ -34,6 +38,7 @@ export default class Spin extends React.Component {
     };  
 
     repaint = (angle) => {
+        const sections = this.state.spins;
         var canvas = document.querySelector('#canvas');
 
         canvas.width = innerWidth;
@@ -105,18 +110,32 @@ export default class Spin extends React.Component {
         ctx.fill();        
     };    
 
-    componentDidMount() {
-        this.repaint(this.state.angle);
+    componentDidMount() {        
+        
+        var items = JSON.parse(localStorage.getItem(SPIN_LIST));
 
-        setInterval(function() {
-            var canvas = document.querySelector('#canvas');
-            if (canvas.width !== innerWidth || canvas.height !== innerHeight) {
-                this.repaint(this.state.angle);
-            }
+        if(items != null && items.length > 0 ){
+            this.setState({spins : items});
+        }
+        else{
+            this.setState({spins : tmpSections});
+        }
+
+        //this.repaint(this.state.angle);
+
+        setInterval(function() {            
+            // var canvas = document.querySelector('#canvas');
+            // if (canvas.width !== innerWidth || canvas.height !== innerHeight) {
+            //     this.repaint(this.state.angle);
+            // }
         }, 10);
     }   
 
-    render(){
+    componentDidUpdate(){
+        this.repaint(this.state.angle);
+    }
+
+    render(){        
         return(
             <div>
                 <canvas id="canvas" width="100%" height="100%" 
